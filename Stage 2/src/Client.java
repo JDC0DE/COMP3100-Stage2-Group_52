@@ -54,7 +54,7 @@ public class Client {
 
             readLineCatchUp(s, bf);
 
-            jobStatus(pw, bf);
+            jobStatus(s, pw, bf);
 
             nextJob(s, pw, bf);
 
@@ -199,13 +199,21 @@ public class Client {
 
     // JCPL messages will be sent to client which highlight the status of the jobs
     // that have been scheduled and need a REDY reponse from the client
-    public static void jobStatus(PrintWriter pw, BufferedReader bf) {
+    public static void jobStatus(Socket s, PrintWriter pw, BufferedReader bf) {
         try {
             if (str.contains(JCPL)) {
                 pw.println(REDY);
                 pw.flush();
                 str = bf.readLine();
                 System.out.println("server JCPL : " + str);
+                if(str.contains(JOBN)){
+                    hold = str.split("\\s+");
+                    jbId = Integer.parseInt(hold[2]);
+                    core = Integer.parseInt(hold[4]);
+                    memory = Integer.parseInt(hold[5]);
+                    disk = Integer.parseInt(hold[6]);
+                    getLargestServer(s, pw, bf);
+                    }
             }
         } catch (IOException e) {
             System.out.println("Error: jobStatus invalid");
