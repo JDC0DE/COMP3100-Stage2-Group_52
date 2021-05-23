@@ -9,6 +9,7 @@ public class Client {
     private static String REDY = "REDY";
     private static String NONE = "NONE";
     private static String GETS = "GETS Capable";
+    //private static String GETS = "GETS Avail";
     private static String OK = "OK";
     private static String SCHD = "SCHD";
     private static String QUIT = "QUIT";
@@ -19,7 +20,10 @@ public class Client {
     // global variables initialised for holding important shceduling data
     private static int biggestCS = 0;
     private static int biggestSID = 0;
+    private static int serverMem = 0;
+    private static int serverDisk = 0;
     private static String biggestST = "";
+    private static String biggestSTATE = "";
 
     // global variable to hold messages sent from server
     private static String str = "";
@@ -48,7 +52,7 @@ public class Client {
 
         handShake(pw, bf);
 
-        getLargestServer(s, pw, bf);
+        getCorrectServer(s, pw, bf);
 
         while (!str.equals(NONE)) {
 
@@ -74,7 +78,58 @@ public class Client {
     // that array can be assigned to the attributes of the ServerInfo object.
     // the object is added to a seperate ArrayList where the allToLargest is checked
     // on the coreCount of each ServerInfo object
-    public static void createServerInfo(ArrayList<String> SLI) {
+    public static void firstFit(ArrayList<String> SLI) {
+        ArrayList<ServerInfo> serverHold = new ArrayList<>();
+        String[] SLIHold;
+        for (int i = 0; i < SLI.size(); i++) {
+            ServerInfo si = new ServerInfo();
+            SLIHold = SLI.get(i).split("\\s+");
+            si.type = SLIHold[0];
+            si.id = Integer.parseInt(SLIHold[1]);
+            si.state = SLIHold[2];
+            si.coreCount = Integer.parseInt(SLIHold[4]);
+            si.memory = Integer.parseInt(SLIHold[5]);
+            si.disk = Integer.parseInt(SLIHold[6]);
+            serverHold.add(si);
+        }
+        // biggestCS = serverHold.get(0).coreCount;
+        // biggestSID = serverHold.get(0).id;
+        // biggestSTATE = serverHold.get(0).state;
+        // serverMem = serverHold.get(0).memory;
+        // serverDisk = serverHold.get(0).disk;
+        // biggestST = serverHold.get(0).type;
+        for(int i = 0; i < serverHold.size(); i++){
+            System.out.println("job cpu check : " + core);
+            System.out.println("server cpu check : " + serverHold.get(i).coreCount);
+        if((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory && disk <= serverHold.get(i).disk) && (serverHold.get(i).state.equals("active") || serverHold.get(i).state.equals("inactive"))){
+        biggestCS = serverHold.get(i).coreCount;
+        biggestSID = serverHold.get(i).id;
+        biggestSTATE = serverHold.get(i).state;
+        biggestST = serverHold.get(i).type;
+        serverMem = serverHold.get(i).memory;
+        serverDisk = serverHold.get(i).disk;
+        break;
+        }
+        // else{
+        //     biggestCS = serverHold.get(i).coreCount;
+        //     biggestSID = serverHold.get(i).id;
+        //     biggestSTATE = serverHold.get(i).state;
+        //     biggestST = serverHold.get(i).type;
+        //     serverMem = serverHold.get(i).memory;
+        //     serverDisk = serverHold.get(i).disk;
+            
+        // }
+        }
+        // for (int i = 0; i < serverHold.size(); i++) {
+        //     if (serverHold.get(i).coreCount > biggestCS) {
+        //         biggestCS = serverHold.get(i).coreCount;
+        //         biggestSID = serverHold.get(i).id;
+        //         biggestST = serverHold.get(i).type;
+        //     }
+        // }
+
+    }
+    public static void cheapestFit(ArrayList<String> SLI) {
         ArrayList<ServerInfo> serverHold = new ArrayList<>();
         String[] SLIHold;
         for (int i = 0; i < SLI.size(); i++) {
@@ -90,19 +145,12 @@ public class Client {
         biggestCS = serverHold.get(0).coreCount;
         biggestSID = serverHold.get(0).id;
         biggestST = serverHold.get(0).type;
-        // for (int i = 0; i < serverHold.size(); i++) {
-        //     if (serverHold.get(i).coreCount > biggestCS) {
-        //         biggestCS = serverHold.get(i).coreCount;
-        //         biggestSID = serverHold.get(i).id;
-        //         biggestST = serverHold.get(i).type;
-        //     }
-        // }
-
+       
     }
 
     // this function is responsible for sending the GETS All message to get all
     // server information and add it into an ArrayList
-    public static void getLargestServer(Socket s, PrintWriter pw, BufferedReader bf) {
+    public static void getCorrectServer(Socket s, PrintWriter pw, BufferedReader bf) {
         String reply = "";
         ArrayList<String> SLI = new ArrayList<>();
         try {
@@ -126,22 +174,11 @@ public class Client {
                         break;
                     }
             }
-            // while (!reply.equals(dot)) {
-            //     //pw.println(OK);
-            //     //pw.flush();
-            //     reply = bf.readLine();
-            //     System.out.println("server inner: " + reply);
-            //     if (!reply.equals(dot)) {
-            //         SLI.add(reply);
-            //         System.out.println(SLI);
-
-            //     }
-            // }
           
             pw.println(OK);
             pw.flush();
 
-            createServerInfo(SLI);
+            firstFit(SLI);
         } catch (Exception e) {
             System.out.println("Error: ArrayList invalid");
             e.printStackTrace();
@@ -212,7 +249,7 @@ public class Client {
                     core = Integer.parseInt(hold[4]);
                     memory = Integer.parseInt(hold[5]);
                     disk = Integer.parseInt(hold[6]);
-                    getLargestServer(s, pw, bf);
+                    getCorrectServer(s, pw, bf);
                     }
             }
         } catch (IOException e) {
@@ -280,7 +317,7 @@ public class Client {
                 core = Integer.parseInt(hold[4]);
                 memory = Integer.parseInt(hold[5]);
                 disk = Integer.parseInt(hold[6]);
-                getLargestServer(s, pw, bf);
+                getCorrectServer(s, pw, bf);
                 }
             }
         } catch (IOException e) {
