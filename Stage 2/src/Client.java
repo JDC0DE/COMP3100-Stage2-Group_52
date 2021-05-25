@@ -92,12 +92,6 @@ public class Client {
             si.disk = Integer.parseInt(SLIHold[6]);
             serverHold.add(si);
         }
-        // biggestCS = serverHold.get(0).coreCount;
-        // biggestSID = serverHold.get(0).id;
-        // biggestSTATE = serverHold.get(0).state;
-        // serverMem = serverHold.get(0).memory;
-        // serverDisk = serverHold.get(0).disk;
-        // biggestST = serverHold.get(0).type;
         for(int i = 0; i < serverHold.size(); i++){
             System.out.println("job cpu check : " + core);
             System.out.println("server cpu check : " + serverHold.get(i).coreCount);
@@ -130,6 +124,7 @@ public class Client {
 
     }
     public static void cheapestFit(ArrayList<String> SLI) {
+        int counter = 0;
         ArrayList<ServerInfo> serverHold = new ArrayList<>();
         String[] SLIHold;
         for (int i = 0; i < SLI.size(); i++) {
@@ -142,11 +137,43 @@ public class Client {
             si.disk = Integer.parseInt(SLIHold[6]);
             serverHold.add(si);
         }
-        biggestCS = serverHold.get(0).coreCount;
-        biggestSID = serverHold.get(0).id;
-        biggestST = serverHold.get(0).type;
-       
+        for(int i = 0; i < serverHold.size(); i++){
+            System.out.println("job cpu check : " + core);
+            System.out.println("server cpu check : " + serverHold.get(i).coreCount);
+        if((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory && disk <= serverHold.get(i).disk)){
+        // if(serverHold.get(i).state.equals("booting") || serverHold.get(i).state.equals("active")){
+        //     counter++;
+        // if(counter <= 2){
+        //     biggestCS = serverHold.get(i).coreCount;
+        //     biggestSID = serverHold.get(i).id;
+        //     biggestSTATE = serverHold.get(i).state;
+        //     biggestST = serverHold.get(i).type;
+        //     serverMem = serverHold.get(i).memory;
+        //     serverDisk = serverHold.get(i).disk;
+        // }
+        
+        
+        if(core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory && disk <= serverHold.get(i).disk && serverHold.get(i).state.equals("active")){
+        biggestCS = serverHold.get(i).coreCount;
+        biggestSID = serverHold.get(i).id;
+        biggestSTATE = serverHold.get(i).state;
+        biggestST = serverHold.get(i).type;
+        serverMem = serverHold.get(i).memory;
+        serverDisk = serverHold.get(i).disk;
+        break;
+        }
+        biggestCS = serverHold.get(i).coreCount;
+        biggestSID = serverHold.get(i).id;
+        biggestSTATE = serverHold.get(i).state;
+        biggestST = serverHold.get(i).type;
+        serverMem = serverHold.get(i).memory;
+        serverDisk = serverHold.get(i).disk;
+        break;
+            }
+        }
     }
+       
+    
 
     // this function is responsible for sending the GETS All message to get all
     // server information and add it into an ArrayList
@@ -178,7 +205,7 @@ public class Client {
             pw.println(OK);
             pw.flush();
 
-            firstFit(SLI);
+            cheapestFit(SLI);
         } catch (Exception e) {
             System.out.println("Error: ArrayList invalid");
             e.printStackTrace();
