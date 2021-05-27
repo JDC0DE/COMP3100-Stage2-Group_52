@@ -132,7 +132,7 @@ public class Client {
         // }
 
     }
-
+    //make sure you run it with ../../configs/other/
     public static void cheapestFit(ArrayList<String> SLI) {
         int tempFit = 0;
         ArrayList<ServerInfo> serverHold = new ArrayList<>();
