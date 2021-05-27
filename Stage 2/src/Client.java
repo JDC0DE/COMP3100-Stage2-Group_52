@@ -9,7 +9,7 @@ public class Client {
     private static String REDY = "REDY";
     private static String NONE = "NONE";
     private static String GETS = "GETS Capable";
-    //private static String GETS = "GETS Avail";
+    // private static String GETS = "GETS Avail";
     private static String OK = "OK";
     private static String SCHD = "SCHD";
     private static String QUIT = "QUIT";
@@ -35,7 +35,6 @@ public class Client {
     private static int memory = 0;
     private static int disk = 0;
 
-
     public static void main(String[] args) throws IOException, SocketException {
         run();
     }
@@ -56,7 +55,7 @@ public class Client {
 
         while (!str.equals(NONE)) {
 
-            readLineCatchUp(s, bf);
+           // readLineCatchUp(s, bf);
 
             jobStatus(s, pw, bf);
 
@@ -92,48 +91,50 @@ public class Client {
             si.disk = Integer.parseInt(SLIHold[6]);
             serverHold.add(si);
         }
-        for(int i = 0; i < serverHold.size(); i++){
+        for (int i = 0; i < serverHold.size(); i++) {
             System.out.println("job cpu check : " + core);
             System.out.println("server cpu check : " + serverHold.get(i).coreCount);
-        if((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory && disk <= serverHold.get(i).disk) && (serverHold.get(i).state.equals("active") || serverHold.get(i).state.equals("inactive"))){
-        biggestCS = serverHold.get(i).coreCount;
-        biggestSID = serverHold.get(i).id;
-        biggestSTATE = serverHold.get(i).state;
-        biggestST = serverHold.get(i).type;
-        serverMem = serverHold.get(i).memory;
-        serverDisk = serverHold.get(i).disk;
-        break;
-        }
-        else{
-            biggestCS = serverHold.get(i).coreCount;
-            biggestSID = serverHold.get(i).id;
-            biggestSTATE = serverHold.get(i).state;
-            biggestST = serverHold.get(i).type;
-            serverMem = serverHold.get(i).memory;
-            serverDisk = serverHold.get(i).disk;
-            break;
-        }
-        // else{
-        //     biggestCS = serverHold.get(i).coreCount;
-        //     biggestSID = serverHold.get(i).id;
-        //     biggestSTATE = serverHold.get(i).state;
-        //     biggestST = serverHold.get(i).type;
-        //     serverMem = serverHold.get(i).memory;
-        //     serverDisk = serverHold.get(i).disk;
-            
-        // }
+            if ((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory
+                    && disk <= serverHold.get(i).disk)
+                    && (serverHold.get(i).state.equals("active") || serverHold.get(i).state.equals("inactive"))) {
+                biggestCS = serverHold.get(i).coreCount;
+                biggestSID = serverHold.get(i).id;
+                biggestSTATE = serverHold.get(i).state;
+                biggestST = serverHold.get(i).type;
+                serverMem = serverHold.get(i).memory;
+                serverDisk = serverHold.get(i).disk;
+                break;
+            } else {
+                biggestCS = serverHold.get(i).coreCount;
+                biggestSID = serverHold.get(i).id;
+                biggestSTATE = serverHold.get(i).state;
+                biggestST = serverHold.get(i).type;
+                serverMem = serverHold.get(i).memory;
+                serverDisk = serverHold.get(i).disk;
+                
+            }
+            // else{
+            // biggestCS = serverHold.get(i).coreCount;
+            // biggestSID = serverHold.get(i).id;
+            // biggestSTATE = serverHold.get(i).state;
+            // biggestST = serverHold.get(i).type;
+            // serverMem = serverHold.get(i).memory;
+            // serverDisk = serverHold.get(i).disk;
+
+            // }
         }
         // for (int i = 0; i < serverHold.size(); i++) {
-        //     if (serverHold.get(i).coreCount > biggestCS) {
-        //         biggestCS = serverHold.get(i).coreCount;
-        //         biggestSID = serverHold.get(i).id;
-        //         biggestST = serverHold.get(i).type;
-        //     }
+        // if (serverHold.get(i).coreCount > biggestCS) {
+        // biggestCS = serverHold.get(i).coreCount;
+        // biggestSID = serverHold.get(i).id;
+        // biggestST = serverHold.get(i).type;
+        // }
         // }
 
     }
+
     public static void cheapestFit(ArrayList<String> SLI) {
-        int counter = 0;
+        int tempFit = 0;
         ArrayList<ServerInfo> serverHold = new ArrayList<>();
         String[] SLIHold;
         for (int i = 0; i < SLI.size(); i++) {
@@ -141,26 +142,55 @@ public class Client {
             SLIHold = SLI.get(i).split("\\s+");
             si.type = SLIHold[0];
             si.id = Integer.parseInt(SLIHold[1]);
+            si.state = SLIHold[2];
             si.coreCount = Integer.parseInt(SLIHold[4]);
             si.memory = Integer.parseInt(SLIHold[5]);
             si.disk = Integer.parseInt(SLIHold[6]);
             serverHold.add(si);
         }
-        for(int i = 0; i < serverHold.size(); i++){
+        for (int i = 0; i < serverHold.size(); i++) {
             System.out.println("job cpu check : " + core);
             System.out.println("server cpu check : " + serverHold.get(i).coreCount);
-        if((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory && disk <= serverHold.get(i).disk)){
-        biggestCS = serverHold.get(i).coreCount;
-        biggestSID = serverHold.get(i).id;
-        biggestSTATE = serverHold.get(i).state;
-        biggestST = serverHold.get(i).type;
-        serverMem = serverHold.get(i).memory;
-        serverDisk = serverHold.get(i).disk;
+            System.out.println("server state check : " + serverHold.get(i).state);
+            if ((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory
+                    && disk <= serverHold.get(i).disk)) {
+                biggestCS = serverHold.get(i).coreCount;
+                biggestSID = serverHold.get(i).id;
+                biggestSTATE = serverHold.get(i).state;
+                biggestST = serverHold.get(i).type;
+                serverMem = serverHold.get(i).memory;
+                serverDisk = serverHold.get(i).disk;
+                break;
             }
+            if (serverHold.get(i).state.equals("booting") || serverHold.get(i).state.equals("active")) {
+                tempFit = core - serverHold.get(i).coreCount;
+                System.out.println("tmp checker: " + tempFit);
+                if (tempFit >= 0) {
+                    biggestCS = serverHold.get(i).coreCount;
+                    biggestSID = serverHold.get(i).id;
+                    biggestSTATE = serverHold.get(i).state;
+                    biggestST = serverHold.get(i).type;
+                    serverMem = serverHold.get(i).memory;
+                    serverDisk = serverHold.get(i).disk;
+                    break;
+                }
+                biggestCS = serverHold.get(i).coreCount;
+                biggestSID = serverHold.get(i).id;
+                biggestSTATE = serverHold.get(i).state;
+                biggestST = serverHold.get(i).type;
+                serverMem = serverHold.get(i).memory;
+                serverDisk = serverHold.get(i).disk;
+                break;
+            }
+                biggestCS = serverHold.get(i).coreCount;
+                biggestSID = serverHold.get(i).id;
+                biggestSTATE = serverHold.get(i).state;
+                biggestST = serverHold.get(i).type;
+                serverMem = serverHold.get(i).memory;
+                serverDisk = serverHold.get(i).disk;
+                
         }
     }
-       
-    
 
     // this function is responsible for sending the GETS All message to get all
     // server information and add it into an ArrayList
@@ -171,28 +201,28 @@ public class Client {
             pw.println(GETS + " " + core + " " + memory + " " + disk);
             pw.flush();
             reply = bf.readLine();
-            //System.out.println("server outer : " + reply);
+            // System.out.println("server outer : " + reply);
             hold = reply.split("\\s+");
             dataLength = Integer.parseInt(hold[1]);
             pw.println(OK);
             pw.flush();
-            for(int i = 0; i < dataLength; i++){
+            for (int i = 0; i < dataLength; i++) {
                 reply = bf.readLine();
-                //System.out.println("server inner: " + reply);
-                    if (!reply.equals(dot)) {
-                        SLI.add(reply);
-                        //System.out.println(SLI);
-    
-                    }
-                    else{
-                        break;
-                    }
+                // System.out.println("server inner: " + reply);
+                if (!reply.equals(dot)) {
+                    SLI.add(reply);
+                    // System.out.println(SLI);
+
+                } else {
+                    break;
+                }
             }
-          
+
             pw.println(OK);
             pw.flush();
+            reply = bf.readLine();
 
-            firstFit(SLI);
+            cheapestFit(SLI);
         } catch (Exception e) {
             System.out.println("Error: ArrayList invalid");
             e.printStackTrace();
@@ -257,14 +287,14 @@ public class Client {
                 pw.flush();
                 str = bf.readLine();
                 System.out.println("server JCPL : " + str);
-                if(str.contains(JOBN)){
+                if (str.contains(JOBN)) {
                     hold = str.split("\\s+");
                     jbId = Integer.parseInt(hold[2]);
                     core = Integer.parseInt(hold[4]);
                     memory = Integer.parseInt(hold[5]);
                     disk = Integer.parseInt(hold[6]);
                     getCorrectServer(s, pw, bf);
-                    }
+                }
             }
         } catch (IOException e) {
             System.out.println("Error: jobStatus invalid");
@@ -278,18 +308,18 @@ public class Client {
         try {
             if (str.contains(JOBN)) {
 
-                 hold = str.split("\\s+");
-                 jbId = Integer.parseInt(hold[2]);
-                //  core = Integer.parseInt(hold[4]);
-                //  memory = Integer.parseInt(hold[5]);
-                //  disk = Integer.parseInt(hold[6]);
-                //  getLargestServer(s, pw, bf);
+                hold = str.split("\\s+");
+                jbId = Integer.parseInt(hold[2]);
+                // core = Integer.parseInt(hold[4]);
+                // memory = Integer.parseInt(hold[5]);
+                // disk = Integer.parseInt(hold[6]);
+                // getLargestServer(s, pw, bf);
 
                 pw.println(SCHD + " " + jbId + " " + biggestST + " " + biggestSID);
                 pw.flush();
                 str = bf.readLine();
                 System.out.println("server JOBN : " + str);
-                
+
             }
         } catch (IOException e) {
             System.out.println("Error: schedJob invalid");
@@ -326,13 +356,13 @@ public class Client {
                 str = bf.readLine();
                 System.out.println("server nextJob : " + str);
 
-                if(str.contains(JOBN)){
-                hold = str.split("\\s+");
-                jbId = Integer.parseInt(hold[2]);
-                core = Integer.parseInt(hold[4]);
-                memory = Integer.parseInt(hold[5]);
-                disk = Integer.parseInt(hold[6]);
-                getCorrectServer(s, pw, bf);
+                if (str.contains(JOBN)) {
+                    hold = str.split("\\s+");
+                    jbId = Integer.parseInt(hold[2]);
+                    core = Integer.parseInt(hold[4]);
+                    memory = Integer.parseInt(hold[5]);
+                    disk = Integer.parseInt(hold[6]);
+                    getCorrectServer(s, pw, bf);
                 }
             }
         } catch (IOException e) {
