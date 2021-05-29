@@ -185,6 +185,7 @@ public class Client {
                 biggestST = serverHold.get(i).type;
                 serverMem = serverHold.get(i).memory;
                 serverDisk = serverHold.get(i).disk;
+                break;
                 
             }
            // && (serverHold.get(i).wjobs <= 10)
