@@ -111,6 +111,7 @@ public class Client {
                 biggestST = serverHold.get(i).type;
                 serverMem = serverHold.get(i).memory;
                 serverDisk = serverHold.get(i).disk;
+                break;
                 
             }
             // else{
@@ -135,6 +136,7 @@ public class Client {
     //make sure you run it with ../../configs/other/
     public static void cheapestFit(ArrayList<String> SLI) {
         int tempFit = 0;
+        int coreFit = 0;
         ArrayList<ServerInfo> serverHold = new ArrayList<>();
         String[] SLIHold;
         for (int i = 0; i < SLI.size(); i++) {
@@ -146,14 +148,17 @@ public class Client {
             si.coreCount = Integer.parseInt(SLIHold[4]);
             si.memory = Integer.parseInt(SLIHold[5]);
             si.disk = Integer.parseInt(SLIHold[6]);
+            si.wjobs = Integer.parseInt(SLIHold[7]);
+            si.rjobs = Integer.parseInt(SLIHold[8]);
             serverHold.add(si);
         }
+        //tempFit = serverHold.get(0).coreCount - core;
         for (int i = 0; i < serverHold.size(); i++) {
-            System.out.println("job cpu check : " + core);
-            System.out.println("server cpu check : " + serverHold.get(i).coreCount);
-            System.out.println("server state check : " + serverHold.get(i).state);
-            if ((core <= serverHold.get(i).coreCount && memory <= serverHold.get(i).memory
-                    && disk <= serverHold.get(i).disk)) {
+            // System.out.println("job cpu check : " + core);
+            // System.out.println("server cpu check : " + serverHold.get(i).coreCount);
+            // System.out.println("server state check : " + serverHold.get(i).state);
+            System.out.println("wjobs check:" + serverHold.get(i).wjobs);
+            if(serverHold.get(i).rjobs == 0){
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
                 biggestSTATE = serverHold.get(i).state;
@@ -162,18 +167,7 @@ public class Client {
                 serverDisk = serverHold.get(i).disk;
                 break;
             }
-            if (serverHold.get(i).state.equals("booting") || serverHold.get(i).state.equals("active")) {
-                tempFit = core - serverHold.get(i).coreCount;
-                System.out.println("tmp checker: " + tempFit);
-                if (tempFit >= 0) {
-                    biggestCS = serverHold.get(i).coreCount;
-                    biggestSID = serverHold.get(i).id;
-                    biggestSTATE = serverHold.get(i).state;
-                    biggestST = serverHold.get(i).type;
-                    serverMem = serverHold.get(i).memory;
-                    serverDisk = serverHold.get(i).disk;
-                    break;
-                }
+            if(serverHold.get(i).wjobs == 0){
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
                 biggestSTATE = serverHold.get(i).state;
@@ -182,6 +176,9 @@ public class Client {
                 serverDisk = serverHold.get(i).disk;
                 break;
             }
+            if (core <= serverHold.get(i).coreCount || memory <= serverHold.get(i).memory
+                    || disk <= serverHold.get(i).disk) {
+                        System.out.println("in inactive if");
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
                 biggestSTATE = serverHold.get(i).state;
@@ -189,8 +186,51 @@ public class Client {
                 serverMem = serverHold.get(i).memory;
                 serverDisk = serverHold.get(i).disk;
                 
+            }
+           // && (serverHold.get(i).wjobs <= 10)
+            // if ((serverHold.get(i).state.equals("booting") || serverHold.get(i).state.equals("active") || serverHold.get(i).state.equals("idle"))) {
+            //     coreFit =  serverHold.get(i).coreCount - core;
+            //     System.out.println("tmp checker: " + tempFit);
+            //     System.out.println("corefit checker: " + coreFit);
+            //     if (tempFit < coreFit) {
+            //         System.out.println("in tmepfit if");
+            //         tempFit = coreFit;
+            //         biggestCS = serverHold.get(i).coreCount;
+            //         biggestSID = serverHold.get(i).id;
+            //         biggestSTATE = serverHold.get(i).state;
+            //         biggestST = serverHold.get(i).type;
+            //         serverMem = serverHold.get(i).memory;
+            //         serverDisk = serverHold.get(i).disk;
+            //         //break;
+                    
+            //     }
+                // else if(core <= serverHold.get(i).coreCount || memory <=serverHold.get(i).memory ||  disk <= serverHold.get(i).disk){
+                //     System.out.println("in else if");
+                //     biggestCS = serverHold.get(i).coreCount;
+                //     biggestSID = serverHold.get(i).id;
+                //     biggestSTATE = serverHold.get(i).state;
+                //     biggestST = serverHold.get(i).type;
+                //     serverMem = serverHold.get(i).memory;
+                //     serverDisk = serverHold.get(i).disk;
+                //     // break;
+                // }
+                // biggestCS = serverHold.get(i).coreCount;
+                // biggestSID = serverHold.get(i).id;
+                // biggestSTATE = serverHold.get(i).state;
+                // biggestST = serverHold.get(i).type;
+                // serverMem = serverHold.get(i).memory;
+                // serverDisk = serverHold.get(i).disk;
+                // break;
+            }
+                // biggestCS = serverHold.get(i).coreCount;
+                // biggestSID = serverHold.get(i).id;
+                // biggestSTATE = serverHold.get(i).state;
+                // biggestST = serverHold.get(i).type;
+                // serverMem = serverHold.get(i).memory;
+                // serverDisk = serverHold.get(i).disk;
+                
         }
-    }
+    
 
     // this function is responsible for sending the GETS All message to get all
     // server information and add it into an ArrayList
@@ -253,19 +293,19 @@ public class Client {
             pw.println((HELO));
             pw.flush();
             str = bf.readLine();
-            System.out.println("server : " + str);
+           // System.out.println("server : " + str);
 
             pw.println(AUTH + " " + userName);
             pw.flush();
 
             str = bf.readLine();
-            System.out.println("server : " + str);
+            //System.out.println("server : " + str);
 
             pw.println(REDY);
             pw.flush();
 
             str = bf.readLine();
-            System.out.println("server : " + str);
+            //System.out.println("server : " + str);
 
             hold = str.split("\\s+");
             core = Integer.parseInt(hold[4]);
@@ -286,7 +326,7 @@ public class Client {
                 pw.println(REDY);
                 pw.flush();
                 str = bf.readLine();
-                System.out.println("server JCPL : " + str);
+                //System.out.println("server JCPL : " + str);
                 if (str.contains(JOBN)) {
                     hold = str.split("\\s+");
                     jbId = Integer.parseInt(hold[2]);
@@ -318,7 +358,7 @@ public class Client {
                 pw.println(SCHD + " " + jbId + " " + biggestST + " " + biggestSID);
                 pw.flush();
                 str = bf.readLine();
-                System.out.println("server JOBN : " + str);
+               // System.out.println("server JOBN : " + str);
 
             }
         } catch (IOException e) {
@@ -336,7 +376,7 @@ public class Client {
                 pw.println(QUIT);
                 pw.flush();
                 str = bf.readLine();
-                System.out.println("server : " + str);
+                //System.out.println("server : " + str);
                 if (str.equals(QUIT)) {
                     s.close();
                 }
@@ -354,7 +394,7 @@ public class Client {
                 pw.println(REDY);
                 pw.flush();
                 str = bf.readLine();
-                System.out.println("server nextJob : " + str);
+               // System.out.println("server nextJob : " + str);
 
                 if (str.contains(JOBN)) {
                     hold = str.split("\\s+");
