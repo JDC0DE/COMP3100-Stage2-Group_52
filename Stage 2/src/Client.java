@@ -156,7 +156,7 @@ public class Client {
             // System.out.println("server cpu check : " + serverHold.get(i).coreCount);
             // System.out.println("server state check : " + serverHold.get(i).state);
             //System.out.println("wjobs check:" + serverHold.get(i).wjobs);
-            if(serverHold.get(i).rjobs == 0){
+            if(serverHold.get(i).wjobs == 0){
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
                 biggestSTATE = serverHold.get(i).state;
@@ -165,7 +165,7 @@ public class Client {
                 serverDisk = serverHold.get(i).disk;
                 break;
             }
-            if(serverHold.get(i).wjobs == 0){
+            if(serverHold.get(i).rjobs == 0){
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
                 biggestSTATE = serverHold.get(i).state;
@@ -183,7 +183,7 @@ public class Client {
                 biggestST = serverHold.get(i).type;
                 serverMem = serverHold.get(i).memory;
                 serverDisk = serverHold.get(i).disk;
-                //break;
+                
                 
             }
            // && (serverHold.get(i).wjobs <= 10)
