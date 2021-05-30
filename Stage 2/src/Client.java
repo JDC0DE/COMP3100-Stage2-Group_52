@@ -135,8 +135,6 @@ public class Client {
     }
     //make sure you run it with ../../configs/other/
     public static void cheapestFit(ArrayList<String> SLI) {
-        int tempFit = 0;
-        int coreFit = 0;
         ArrayList<ServerInfo> serverHold = new ArrayList<>();
         String[] SLIHold;
         for (int i = 0; i < SLI.size(); i++) {
@@ -157,7 +155,7 @@ public class Client {
             // System.out.println("job cpu check : " + core);
             // System.out.println("server cpu check : " + serverHold.get(i).coreCount);
             // System.out.println("server state check : " + serverHold.get(i).state);
-            System.out.println("wjobs check:" + serverHold.get(i).wjobs);
+            //System.out.println("wjobs check:" + serverHold.get(i).wjobs);
             if(serverHold.get(i).rjobs == 0){
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
@@ -178,14 +176,14 @@ public class Client {
             }
             if (core <= serverHold.get(i).coreCount || memory <= serverHold.get(i).memory
                     || disk <= serverHold.get(i).disk) {
-                        System.out.println("in inactive if");
+                    
                 biggestCS = serverHold.get(i).coreCount;
                 biggestSID = serverHold.get(i).id;
                 biggestSTATE = serverHold.get(i).state;
                 biggestST = serverHold.get(i).type;
                 serverMem = serverHold.get(i).memory;
                 serverDisk = serverHold.get(i).disk;
-                break;
+                //break;
                 
             }
            // && (serverHold.get(i).wjobs <= 10)
