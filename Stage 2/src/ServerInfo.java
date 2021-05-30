@@ -1,4 +1,4 @@
-public class ServerInfo { //SeverInfo class intended for holding server information 
+public class ServerInfo { // SeverInfo class intended for holding server information
     String type;
     int id;
     String state;
@@ -8,9 +8,9 @@ public class ServerInfo { //SeverInfo class intended for holding server informat
     int wjobs;
     int rjobs;
 
-    public ServerInfo(){ //ServerInfo Constructor
+    public ServerInfo() { // ServerInfo Constructor
         type = "";
-        id =0; 
+        id = 0;
         state = "";
         coreCount = 0;
         memory = 0;
